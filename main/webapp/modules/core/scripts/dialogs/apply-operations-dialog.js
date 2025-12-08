@@ -110,7 +110,7 @@ function ApplyOperationsDialog() {
         },
         "json",
         function(e) {
-          elmts.errorContainer.text($.i18n('core-project/json-invalid', e.message));   
+          elmts.errorContainer.text($.i18n('core-project/json-invalid', e.message));
         },
     );
 

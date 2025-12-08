@@ -72,7 +72,8 @@ function ColumnMappingDialog(operations, analyzedOperations) {
     let select = $('<select></select>')
       .attr('value', defaultValue)
       .data('originalName', columnName)
-      .attr('required', 'true')
+      // TODO: account for this elsewhere
+      // .attr('required', 'true')
       .attr('name', name);
     if (defaultValue === '') {
       $('<option></option>')
@@ -117,7 +118,8 @@ function ColumnMappingDialog(operations, analyzedOperations) {
              .attr('value', defaultValue)
              .data('originalName', columnName)
              .data('expectedToExist', false)
-             .attr('required', 'true')
+             // TODO: figure out what's up with this
+             // .attr('required', 'true')
              .attr('name', name))
       );
     tr.appendTo(elmts.newColumnsTableBody);

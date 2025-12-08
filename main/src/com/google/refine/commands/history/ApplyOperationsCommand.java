@@ -108,20 +108,36 @@ public class ApplyOperationsCommand extends Command {
 
             // check all required columns are present
             Set<String> requiredColumns = recipe.getRequiredColumns();
+            List<String> missingColumns = new ArrayList<>();
             for (String columnName : requiredColumns) {
                 if (project.columnModel.getColumnByName(columnName) == null) {
-                    throw new IllegalArgumentException(
-                            "Column '" + columnName + "' is referenced in the list of operations but is absent from the project");
+                    // TODO: collect all these missing columns instead of throwing an exception straight away
+                    // throw new IllegalArgumentException(
+                    //         "Column '" + columnName + "' is referenced in the list of operations but is absent from the project");
+                    missingColumns.add(columnName);
                 }
             }
 
             // check all new columns are not present
             Set<String> newColumns = recipe.getNewColumns();
+            List<String> duplicateColumns = new ArrayList<>();
             for (String columnName : newColumns) {
                 if (project.columnModel.getColumnByName(columnName) != null) {
+                    // TODO: collect all these extra columns instead of throwing an exception straight away
                     throw new IllegalArgumentException(
                             "Column '" + columnName + "' already exists in the project");
+                    // duplicateColumns.add(columnName);
+                    // update: I think this one might be valid
+                    // still, maybe it helps to respond with all these errors at once rather than
+                    // throwing at the first one
                 }
+            }
+
+            // could we remove any steps that feature missing, extra, or downstream columns?
+            String force = request.getParameter("force");
+            if (!Boolean.valueOf(force) && !(duplicateColumns.isEmpty() && missingColumns.isEmpty())) {
+                respond(response, "{\"code\": \"bad columns!\"}");
+                return;
             }
 
             // Run all operations in sequence
